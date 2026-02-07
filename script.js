@@ -25,9 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let departureHours = Math.floor(totalMinutes / 60) % 24;
             let departureMinutes = totalMinutes % 60;
             
-            const formattedHours = departureHours.toString().padStart(2, '0');
+            // Convert to 12-hour format
+            const period = departureHours >= 12 ? 'مساءً' : 'صباحاً';
+            let displayHours = departureHours % 12;
+            if (displayHours === 0) displayHours = 12;
+            
             const formattedMinutes = departureMinutes.toString().padStart(2, '0');
-            const departureTime = `${formattedHours}:${formattedMinutes}`;
+            const departureTime = `${displayHours}:${formattedMinutes} ${period}`;
             
             document.getElementById('departure-time').textContent = departureTime;
             document.getElementById('result-container').classList.remove('hidden');
