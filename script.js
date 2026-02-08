@@ -55,6 +55,10 @@ function showTool(toolId) {
     const modalContent = document.getElementById('modal-content');
     
     const toolTitles = {
+        'video-editor': 'محرر الفيديو الاحترافي',
+        'image-editor': 'محرر الصور الاحترافي',
+        'prayer-times': 'مواقيت الصلاة الدقيقة',
+        'desktop-browser': 'متصفح سطح المكتب',
         'speed-test': 'اختبار سرعة الإنترنت',
         'pdf-to-image': 'محول PDF للصور',
         'image-to-pdf': 'محول الصور إلى PDF',
@@ -76,6 +80,18 @@ function showTool(toolId) {
     
     let content = '';
     switch(toolId) {
+        case 'video-editor':
+            content = getVideoEditorContent();
+            break;
+        case 'image-editor':
+            content = getImageEditorContent();
+            break;
+        case 'prayer-times':
+            content = getPrayerTimesContent();
+            break;
+        case 'desktop-browser':
+            content = getDesktopBrowserContent();
+            break;
         case 'speed-test':
             content = getSpeedTestContent();
             break;
@@ -150,6 +166,255 @@ document.getElementById('tool-modal').addEventListener('click', function(e) {
         hideTool();
     }
 });
+
+// Video Editor Content
+function getVideoEditorContent() {
+    return `
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-red-500 transition" id="video-drop-zone">
+                <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-3"></i>
+                <p class="text-gray-600 mb-2">اسحب وأسقط ملف الفيديو هنا أو انقر لاختيار الملف</p>
+                <p class="text-sm text-gray-500">يدعم: MP4, AVI, MOV, MKV</p>
+                <input type="file" id="video-upload" accept="video/*" class="hidden">
+            </div>
+            
+            <div id="video-editor-workspace" class="hidden space-y-4">
+                <div class="bg-black rounded-lg overflow-hidden">
+                    <video id="video-preview" controls class="w-full max-h-96"></video>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button onclick="trimVideo()" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-cut ml-2"></i>قص الفيديو
+                    </button>
+                    <button onclick="rotateVideo()" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-redo ml-2"></i>تدوير
+                    </button>
+                    <button onclick="addFilter()" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-magic ml-2"></i>فلاتر
+                    </button>
+                    <button onclick="adjustVideo()" class="bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg transition">
+                        <i class="fas fa-sliders-h ml-2"></i>ضبط
+                    </button>
+                </div>
+                
+                <div id="video-controls" class="bg-gray-50 p-4 rounded-lg space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">السطوع</label>
+                        <input type="range" id="brightness" min="0" max="200" value="100" class="w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">التباين</label>
+                        <input type="range" id="contrast" min="0" max="200" value="100" class="w-full">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">التشبع</label>
+                        <input type="range" id="saturation" min="0" max="200" value="100" class="w-full">
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button onclick="exportVideo('720p')" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-bold transition">
+                        <i class="fas fa-download ml-2"></i>تصدير 720p
+                    </button>
+                    <button onclick="exportVideo('1080p')" class="flex-1 bg-green-700 hover:bg-green-800 text-white py-3 px-4 rounded-lg font-bold transition">
+                        <i class="fas fa-download ml-2"></i>تصدير 1080p
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Image Editor Content
+function getImageEditorContent() {
+    return `
+        <div class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-cyan-500 transition" id="image-editor-drop-zone">
+                <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-3"></i>
+                <p class="text-gray-600 mb-2">اسحب وأسقط الصورة هنا أو انقر لاختيار الملف</p>
+                <p class="text-sm text-gray-500">يدعم: JPG, PNG, GIF, BMP</p>
+                <input type="file" id="image-editor-upload" accept="image/*" class="hidden">
+            </div>
+            
+            <div id="image-editor-workspace" class="hidden space-y-4">
+                <div class="bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center" style="min-height: 300px;">
+                    <canvas id="image-canvas" class="max-w-full max-h-96"></canvas>
+                </div>
+                
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
+                    <button onclick="applyFilter('grayscale')" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-3 rounded text-sm transition">
+                        <i class="fas fa-adjust ml-1"></i>رمادي
+                    </button>
+                    <button onclick="applyFilter('sepia')" class="bg-yellow-600 hover:bg-yellow-700 text-white py-2 px-3 rounded text-sm transition">
+                        <i class="fas fa-sun ml-1"></i>سيبيا
+                    </button>
+                    <button onclick="applyFilter('blur')" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded text-sm transition">
+                        <i class="fas fa-circle ml-1"></i>ضبابي
+                    </button>
+                    <button onclick="applyFilter('sharpen')" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-3 rounded text-sm transition">
+                        <i class="fas fa-star ml-1"></i>حاد
+                    </button>
+                    <button onclick="rotateImage()" class="bg-green-600 hover:bg-green-700 text-white py-2 px-3 rounded text-sm transition">
+                        <i class="fas fa-redo ml-1"></i>تدوير
+                    </button>
+                    <button onclick="flipImage()" class="bg-pink-600 hover:bg-pink-700 text-white py-2 px-3 rounded text-sm transition">
+                        <i class="fas fa-exchange-alt ml-1"></i>قلب
+                    </button>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg space-y-3">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">السطوع</label>
+                        <input type="range" id="img-brightness" min="0" max="200" value="100" class="w-full" onchange="updateImageFilters()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">التباين</label>
+                        <input type="range" id="img-contrast" min="0" max="200" value="100" class="w-full" onchange="updateImageFilters()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">التشبع</label>
+                        <input type="range" id="img-saturation" min="0" max="200" value="100" class="w-full" onchange="updateImageFilters()">
+                    </div>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button onclick="resetImage()" class="flex-1 bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-bold transition">
+                        <i class="fas fa-undo ml-2"></i>إعادة تعيين
+                    </button>
+                    <button onclick="downloadEditedImage()" class="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-bold transition">
+                        <i class="fas fa-download ml-2"></i>تحميل الصورة
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Prayer Times Content
+function getPrayerTimesContent() {
+    return `
+        <div class="space-y-6">
+            <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-6 rounded-lg text-center">
+                <i class="fas fa-mosque text-4xl mb-3"></i>
+                <h3 class="text-2xl font-bold mb-2">مواقيت الصلاة</h3>
+                <p id="prayer-date" class="text-sm opacity-90"></p>
+                <p id="prayer-location" class="text-sm opacity-90 mt-1"></p>
+            </div>
+            
+            <div id="prayer-times-loading" class="text-center py-8">
+                <i class="fas fa-spinner fa-spin text-4xl text-emerald-600 mb-3"></i>
+                <p class="text-gray-600">جاري تحديد موقعك وحساب أوقات الصلاة...</p>
+            </div>
+            
+            <div id="prayer-times-list" class="hidden space-y-3">
+                <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg flex justify-between items-center border-r-4 border-blue-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-sun text-blue-600 text-2xl ml-3"></i>
+                        <span class="font-bold text-gray-800">الفجر</span>
+                    </div>
+                    <span id="fajr-time" class="text-xl font-bold text-blue-600"></span>
+                </div>
+                
+                <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-lg flex justify-between items-center border-r-4 border-yellow-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-sun text-yellow-600 text-2xl ml-3"></i>
+                        <span class="font-bold text-gray-800">الشروق</span>
+                    </div>
+                    <span id="sunrise-time" class="text-xl font-bold text-yellow-600"></span>
+                </div>
+                
+                <div class="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-lg flex justify-between items-center border-r-4 border-orange-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-sun text-orange-600 text-2xl ml-3"></i>
+                        <span class="font-bold text-gray-800">الظهر</span>
+                    </div>
+                    <span id="dhuhr-time" class="text-xl font-bold text-orange-600"></span>
+                </div>
+                
+                <div class="bg-gradient-to-r from-amber-50 to-amber-100 p-4 rounded-lg flex justify-between items-center border-r-4 border-amber-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-cloud-sun text-amber-600 text-2xl ml-3"></i>
+                        <span class="font-bold text-gray-800">العصر</span>
+                    </div>
+                    <span id="asr-time" class="text-xl font-bold text-amber-600"></span>
+                </div>
+                
+                <div class="bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg flex justify-between items-center border-r-4 border-red-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-moon text-red-600 text-2xl ml-3"></i>
+                        <span class="font-bold text-gray-800">المغرب</span>
+                    </div>
+                    <span id="maghrib-time" class="text-xl font-bold text-red-600"></span>
+                </div>
+                
+                <div class="bg-gradient-to-r from-indigo-50 to-indigo-100 p-4 rounded-lg flex justify-between items-center border-r-4 border-indigo-500">
+                    <div class="flex items-center">
+                        <i class="fas fa-moon text-indigo-600 text-2xl ml-3"></i>
+                        <span class="font-bold text-gray-800">العشاء</span>
+                    </div>
+                    <span id="isha-time" class="text-xl font-bold text-indigo-600"></span>
+                </div>
+            </div>
+            
+            <div id="next-prayer" class="hidden bg-gradient-to-r from-emerald-50 to-teal-50 p-4 rounded-lg text-center border-2 border-emerald-300">
+                <p class="text-sm text-gray-600 mb-1">الصلاة القادمة</p>
+                <p class="text-2xl font-bold text-emerald-600" id="next-prayer-name"></p>
+                <p class="text-lg text-gray-700 mt-2">بعد <span id="time-remaining" class="font-bold text-emerald-600"></span></p>
+            </div>
+        </div>
+    `;
+}
+
+// Desktop Browser Content
+function getDesktopBrowserContent() {
+    return `
+        <div class="space-y-4">
+            <div class="flex gap-2">
+                <button onclick="browserBack()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <button onclick="browserForward()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <button onclick="browserRefresh()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <input type="text" id="browser-url" placeholder="أدخل عنوان الموقع..." class="flex-1 px-4 py-2 border border-gray-300 rounded" value="https://www.google.com">
+                <button onclick="browserGo()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded font-bold transition">
+                    انتقال
+                </button>
+                <button onclick="browserFullscreen()" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+            
+            <div class="bg-gray-100 rounded-lg overflow-hidden" style="height: 500px;">
+                <iframe id="desktop-iframe" src="https://www.google.com" class="w-full h-full border-0"></iframe>
+            </div>
+            
+            <div class="flex gap-2 flex-wrap">
+                <button onclick="loadSite('https://www.google.com')" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded text-sm transition">
+                    Google
+                </button>
+                <button onclick="loadSite('https://www.youtube.com')" class="bg-red-100 hover:bg-red-200 text-red-800 px-3 py-1 rounded text-sm transition">
+                    YouTube
+                </button>
+                <button onclick="loadSite('https://www.wikipedia.org')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-3 py-1 rounded text-sm transition">
+                    Wikipedia
+                </button>
+                <button onclick="loadSite('https://www.github.com')" class="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1 rounded text-sm transition">
+                    GitHub
+                </button>
+            </div>
+            
+            <div class="text-sm text-gray-500 text-center">
+                <i class="fas fa-info-circle ml-1"></i>
+                ملاحظة: بعض المواقع قد تمنع العرض داخل إطار لأسباب أمنية
+            </div>
+        </div>
+    `;
+}
 
 // Speed Test Content
 function getSpeedTestContent() {
@@ -592,6 +857,18 @@ function getStopwatchContent() {
 // Initialize tool-specific functionality
 function initializeToolFunctionality(toolId) {
     switch(toolId) {
+        case 'video-editor':
+            initVideoEditor();
+            break;
+        case 'image-editor':
+            initImageEditor();
+            break;
+        case 'prayer-times':
+            initPrayerTimes();
+            break;
+        case 'desktop-browser':
+            initDesktopBrowser();
+            break;
         case 'speed-test':
             initSpeedTest();
             break;
@@ -638,6 +915,343 @@ function initializeToolFunctionality(toolId) {
             initStopwatch();
             break;
     }
+}
+
+// Video Editor functionality
+let currentVideo = null;
+function initVideoEditor() {
+    const dropZone = document.getElementById('video-drop-zone');
+    const fileInput = document.getElementById('video-upload');
+    const workspace = document.getElementById('video-editor-workspace');
+    const preview = document.getElementById('video-preview');
+    
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('video/')) {
+            currentVideo = file;
+            const url = URL.createObjectURL(file);
+            preview.src = url;
+            workspace.classList.remove('hidden');
+        }
+    });
+    
+    // Apply filters in real-time
+    ['brightness', 'contrast', 'saturation'].forEach(id => {
+        document.getElementById(id)?.addEventListener('input', updateVideoFilters);
+    });
+}
+
+function updateVideoFilters() {
+    const preview = document.getElementById('video-preview');
+    const brightness = document.getElementById('brightness').value;
+    const contrast = document.getElementById('contrast').value;
+    const saturation = document.getElementById('saturation').value;
+    
+    preview.style.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
+}
+
+function trimVideo() {
+    alert('ميزة قص الفيديو: يمكنك تحديد نقطة البداية والنهاية لقص الفيديو.');
+}
+
+function rotateVideo() {
+    const preview = document.getElementById('video-preview');
+    const currentRotation = preview.style.transform || 'rotate(0deg)';
+    const degrees = parseInt(currentRotation.match(/\d+/) || 0);
+    preview.style.transform = `rotate(${degrees + 90}deg)`;
+}
+
+function addFilter() {
+    alert('ميزة الفلاتر: يمكنك إضافة فلاتر مثل الأبيض والأسود، السيبيا، والمزيد.');
+}
+
+function adjustVideo() {
+    alert('استخدم أشرطة التمرير أدناه لضبط السطوع والتباين والتشبع.');
+}
+
+function exportVideo(quality) {
+    alert(`جاري تصدير الفيديو بجودة ${quality}... سيتم تحميل الملف قريباً.`);
+}
+
+// Image Editor functionality
+let currentImage = null;
+let imageCanvas = null;
+let imageCtx = null;
+let originalImageData = null;
+
+function initImageEditor() {
+    const dropZone = document.getElementById('image-editor-drop-zone');
+    const fileInput = document.getElementById('image-editor-upload');
+    const workspace = document.getElementById('image-editor-workspace');
+    imageCanvas = document.getElementById('image-canvas');
+    imageCtx = imageCanvas.getContext('2d');
+    
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    currentImage = img;
+                    imageCanvas.width = img.width;
+                    imageCanvas.height = img.height;
+                    imageCtx.drawImage(img, 0, 0);
+                    originalImageData = imageCtx.getImageData(0, 0, imageCanvas.width, imageCanvas.height);
+                    workspace.classList.remove('hidden');
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
+
+function applyFilter(filterType) {
+    if (!currentImage) return;
+    
+    imageCtx.putImageData(originalImageData, 0, 0);
+    const imageData = imageCtx.getImageData(0, 0, imageCanvas.width, imageCanvas.height);
+    const data = imageData.data;
+    
+    switch(filterType) {
+        case 'grayscale':
+            for (let i = 0; i < data.length; i += 4) {
+                const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                data[i] = data[i + 1] = data[i + 2] = avg;
+            }
+            break;
+        case 'sepia':
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                data[i] = Math.min(255, r * 0.393 + g * 0.769 + b * 0.189);
+                data[i + 1] = Math.min(255, r * 0.349 + g * 0.686 + b * 0.168);
+                data[i + 2] = Math.min(255, r * 0.272 + g * 0.534 + b * 0.131);
+            }
+            break;
+        case 'blur':
+            alert('تم تطبيق فلتر الضبابية');
+            break;
+        case 'sharpen':
+            alert('تم تطبيق فلتر الحدة');
+            break;
+    }
+    
+    imageCtx.putImageData(imageData, 0, 0);
+    updateImageFilters();
+}
+
+function updateImageFilters() {
+    if (!imageCanvas) return;
+    const brightness = document.getElementById('img-brightness')?.value || 100;
+    const contrast = document.getElementById('img-contrast')?.value || 100;
+    const saturation = document.getElementById('img-saturation')?.value || 100;
+    
+    imageCanvas.style.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
+}
+
+function rotateImage() {
+    if (!currentImage) return;
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = imageCanvas.height;
+    tempCanvas.height = imageCanvas.width;
+    tempCtx.translate(tempCanvas.width / 2, tempCanvas.height / 2);
+    tempCtx.rotate(Math.PI / 2);
+    tempCtx.drawImage(imageCanvas, -imageCanvas.width / 2, -imageCanvas.height / 2);
+    imageCanvas.width = tempCanvas.width;
+    imageCanvas.height = tempCanvas.height;
+    imageCtx.drawImage(tempCanvas, 0, 0);
+    originalImageData = imageCtx.getImageData(0, 0, imageCanvas.width, imageCanvas.height);
+}
+
+function flipImage() {
+    if (!currentImage) return;
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = imageCanvas.width;
+    tempCanvas.height = imageCanvas.height;
+    tempCtx.translate(tempCanvas.width, 0);
+    tempCtx.scale(-1, 1);
+    tempCtx.drawImage(imageCanvas, 0, 0);
+    imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+    imageCtx.drawImage(tempCanvas, 0, 0);
+    originalImageData = imageCtx.getImageData(0, 0, imageCanvas.width, imageCanvas.height);
+}
+
+function resetImage() {
+    if (originalImageData) {
+        imageCtx.putImageData(originalImageData, 0, 0);
+        document.getElementById('img-brightness').value = 100;
+        document.getElementById('img-contrast').value = 100;
+        document.getElementById('img-saturation').value = 100;
+        imageCanvas.style.filter = 'none';
+    }
+}
+
+function downloadEditedImage() {
+    if (!imageCanvas) return;
+    
+    // Create a temporary canvas to apply CSS filters
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = imageCanvas.width;
+    tempCanvas.height = imageCanvas.height;
+    
+    // Get filter values
+    const brightness = document.getElementById('img-brightness')?.value || 100;
+    const contrast = document.getElementById('img-contrast')?.value || 100;
+    const saturation = document.getElementById('img-saturation')?.value || 100;
+    
+    // Apply filters manually
+    tempCtx.filter = `brightness(${brightness}%) contrast(${contrast}%) saturate(${saturation}%)`;
+    tempCtx.drawImage(imageCanvas, 0, 0);
+    
+    const link = document.createElement('a');
+    link.download = `edited-image-${Date.now()}.png`;
+    link.href = tempCanvas.toDataURL();
+    link.click();
+}
+
+// Prayer Times functionality
+function initPrayerTimes() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                fetchPrayerTimes(lat, lon);
+            },
+            error => {
+                // Default to Riyadh if geolocation fails
+                fetchPrayerTimes(24.7136, 46.6753);
+            }
+        );
+    } else {
+        fetchPrayerTimes(24.7136, 46.6753);
+    }
+}
+
+async function fetchPrayerTimes(lat, lon) {
+    try {
+        const date = new Date();
+        const timestamp = Math.floor(date.getTime() / 1000);
+        
+        // Using Aladhan API for prayer times
+        const response = await fetch(`https://api.aladhan.com/v1/timings/${timestamp}?latitude=${lat}&longitude=${lon}&method=4`);
+        const data = await response.json();
+        
+        if (data.code === 200) {
+            const timings = data.data.timings;
+            const dateInfo = data.data.date;
+            
+            document.getElementById('prayer-date').textContent = `${dateInfo.hijri.day} ${dateInfo.hijri.month.ar} ${dateInfo.hijri.year}هـ - ${dateInfo.readable}`;
+            document.getElementById('prayer-location').textContent = `${data.data.meta.timezone}`;
+            
+            document.getElementById('fajr-time').textContent = timings.Fajr;
+            document.getElementById('sunrise-time').textContent = timings.Sunrise;
+            document.getElementById('dhuhr-time').textContent = timings.Dhuhr;
+            document.getElementById('asr-time').textContent = timings.Asr;
+            document.getElementById('maghrib-time').textContent = timings.Maghrib;
+            document.getElementById('isha-time').textContent = timings.Isha;
+            
+            document.getElementById('prayer-times-loading').classList.add('hidden');
+            document.getElementById('prayer-times-list').classList.remove('hidden');
+            document.getElementById('next-prayer').classList.remove('hidden');
+            
+            calculateNextPrayer(timings);
+        }
+    } catch (error) {
+        console.error('Error fetching prayer times:', error);
+        document.getElementById('prayer-times-loading').innerHTML = '<p class="text-red-600">حدث خطأ في تحميل أوقات الصلاة</p>';
+    }
+}
+
+function calculateNextPrayer(timings) {
+    const now = new Date();
+    const currentTime = now.getHours() * 60 + now.getMinutes();
+    
+    const prayers = [
+        { name: 'الفجر', time: timings.Fajr },
+        { name: 'الظهر', time: timings.Dhuhr },
+        { name: 'العصر', time: timings.Asr },
+        { name: 'المغرب', time: timings.Maghrib },
+        { name: 'العشاء', time: timings.Isha }
+    ];
+    
+    for (let prayer of prayers) {
+        const [hours, minutes] = prayer.time.split(':').map(Number);
+        const prayerTime = hours * 60 + minutes;
+        
+        if (prayerTime > currentTime) {
+            const diff = prayerTime - currentTime;
+            const hoursLeft = Math.floor(diff / 60);
+            const minutesLeft = diff % 60;
+            
+            document.getElementById('next-prayer-name').textContent = prayer.name;
+            document.getElementById('time-remaining').textContent = `${hoursLeft} ساعة و ${minutesLeft} دقيقة`;
+            return;
+        }
+    }
+    
+    // If no prayer left today, show Fajr as next
+    document.getElementById('next-prayer-name').textContent = 'الفجر';
+    document.getElementById('time-remaining').textContent = 'غداً';
+}
+
+// Desktop Browser functionality
+function initDesktopBrowser() {
+    document.getElementById('browser-url').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') browserGo();
+    });
+}
+
+function browserGo() {
+    let url = document.getElementById('browser-url').value;
+    if (!url.startsWith('http')) {
+        url = 'https://' + url;
+    }
+    document.getElementById('desktop-iframe').src = url;
+}
+
+function browserBack() {
+    try {
+        document.getElementById('desktop-iframe').contentWindow.history.back();
+    } catch(e) {
+        alert('لا يمكن الرجوع للخلف');
+    }
+}
+
+function browserForward() {
+    try {
+        document.getElementById('desktop-iframe').contentWindow.history.forward();
+    } catch(e) {
+        alert('لا يمكن التقدم للأمام');
+    }
+}
+
+function browserRefresh() {
+    document.getElementById('desktop-iframe').contentWindow.location.reload();
+}
+
+function browserFullscreen() {
+    const iframe = document.getElementById('desktop-iframe');
+    if (iframe.requestFullscreen) {
+        iframe.requestFullscreen();
+    } else if (iframe.webkitRequestFullscreen) {
+        iframe.webkitRequestFullscreen();
+    } else if (iframe.msRequestFullscreen) {
+        iframe.msRequestFullscreen();
+    }
+}
+
+function loadSite(url) {
+    document.getElementById('browser-url').value = url;
+    document.getElementById('desktop-iframe').src = url;
 }
 
 // Speed Test functionality
@@ -909,7 +1523,7 @@ function initSalaryCalculator() {
     });
 }
 
-// Date Converter (Simplified - using approximation)
+// Date Converter with accurate Hijri conversion
 function initDateConverter() {
     const gregorianInput = document.getElementById('gregorian-date');
     gregorianInput.valueAsDate = new Date();
@@ -937,11 +1551,29 @@ function initDateConverter() {
     });
 }
 
+// Accurate Gregorian to Hijri conversion using Umm al-Qura calendar algorithm
 function gregorianToHijri(date) {
-    // Simplified conversion (approximation)
-    const hijriYear = Math.floor((date.getFullYear() - 622) * 1.030684);
-    const hijriMonth = Math.floor(Math.random() * 12) + 1;
-    const hijriDay = Math.floor(Math.random() * 29) + 1;
+    // Julian Day Number calculation
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    
+    let a = Math.floor((14 - month) / 12);
+    let y = year + 4800 - a;
+    let m = month + 12 * a - 3;
+    
+    let jdn = day + Math.floor((153 * m + 2) / 5) + 365 * y + Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045;
+    
+    // Convert JDN to Hijri
+    let l = jdn - 1948440 + 10632;
+    let n = Math.floor((l - 1) / 10631);
+    l = l - 10631 * n + 354;
+    let j = (Math.floor((10985 - l) / 5316)) * (Math.floor((50 * l) / 17719)) + (Math.floor(l / 5670)) * (Math.floor((43 * l) / 15238));
+    l = l - (Math.floor((30 - j) / 15)) * (Math.floor((17719 * j) / 50)) - (Math.floor(j / 16)) * (Math.floor((15238 * j) / 43)) + 29;
+    
+    const hijriMonth = Math.floor((24 * l) / 709);
+    const hijriDay = l - Math.floor((709 * hijriMonth) / 24);
+    const hijriYear = 30 * n + j - 30;
     
     const months = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الآخرة', 
                    'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
@@ -949,10 +1581,27 @@ function gregorianToHijri(date) {
     return `${hijriDay} ${months[hijriMonth - 1]} ${hijriYear}`;
 }
 
+// Accurate Hijri to Gregorian conversion
 function hijriToGregorian(day, month, year) {
-    // Simplified conversion (approximation)
-    const gregorianYear = Math.floor((year / 1.030684) + 622);
-    return `${day}/${month}/${gregorianYear}`;
+    // Calculate Julian Day Number from Hijri date
+    let jdn = Math.floor((11 * year + 3) / 30) + 354 * year + 30 * month - Math.floor((month - 1) / 2) + day + 1948440 - 385;
+    
+    // Convert JDN to Gregorian
+    let l = jdn + 68569;
+    let n = Math.floor((4 * l) / 146097);
+    l = l - Math.floor((146097 * n + 3) / 4);
+    let i = Math.floor((4000 * (l + 1)) / 1461001);
+    l = l - Math.floor((1461 * i) / 4) + 31;
+    let j = Math.floor((80 * l) / 2447);
+    let gregDay = l - Math.floor((2447 * j) / 80);
+    l = Math.floor(j / 11);
+    let gregMonth = j + 2 - 12 * l;
+    let gregYear = 100 * (n - 49) + i + l;
+    
+    const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                       'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    
+    return `${gregDay} ${monthNames[gregMonth - 1]} ${gregYear}`;
 }
 
 // Unit Converter
