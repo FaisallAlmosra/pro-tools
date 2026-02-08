@@ -185,6 +185,82 @@
             <h2 class="text-4xl font-bold text-white mb-8 section-title">أدوات مميزة</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Video Editor Tool -->
+                <div class="glass-effect rounded-2xl shadow-xl overflow-hidden tool-card border-t-4 border-red-500">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-gradient-to-br from-red-400 to-red-600 p-4 rounded-xl mr-3 shadow-lg">
+                                <i class="fas fa-video text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">محرر الفيديو الاحترافي</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">قص، دمج، إضافة مؤثرات وتصدير الفيديو بجودة عالية</p>
+                        <div class="text-center">
+                            <button class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 px-4 rounded-xl font-bold shadow-lg transform hover:scale-105 transition" onclick="showTool('video-editor')">
+                                <i class="fas fa-magic ml-2"></i>
+                                استخدام الأداة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Editor Tool -->
+                <div class="glass-effect rounded-2xl shadow-xl overflow-hidden tool-card border-t-4 border-cyan-500">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-gradient-to-br from-cyan-400 to-cyan-600 p-4 rounded-xl mr-3 shadow-lg">
+                                <i class="fas fa-image text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">محرر الصور الاحترافي</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">تعديل، فلاتر، تأثيرات، قص وتدوير الصور بسهولة</p>
+                        <div class="text-center">
+                            <button class="w-full bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white py-3 px-4 rounded-xl font-bold shadow-lg transform hover:scale-105 transition" onclick="showTool('image-editor')">
+                                <i class="fas fa-magic ml-2"></i>
+                                استخدام الأداة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prayer Times Tool -->
+                <div class="glass-effect rounded-2xl shadow-xl overflow-hidden tool-card border-t-4 border-emerald-500">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-gradient-to-br from-emerald-400 to-emerald-600 p-4 rounded-xl mr-3 shadow-lg">
+                                <i class="fas fa-mosque text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">مواقيت الصلاة الدقيقة</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">أوقات الصلاة الدقيقة حسب موقعك الجغرافي</p>
+                        <div class="text-center">
+                            <button class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white py-3 px-4 rounded-xl font-bold shadow-lg transform hover:scale-105 transition" onclick="showTool('prayer-times')">
+                                <i class="fas fa-magic ml-2"></i>
+                                استخدام الأداة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Browser Tool -->
+                <div class="glass-effect rounded-2xl shadow-xl overflow-hidden tool-card border-t-4 border-indigo-500">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="bg-gradient-to-br from-indigo-400 to-indigo-600 p-4 rounded-xl mr-3 shadow-lg">
+                                <i class="fas fa-desktop text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800">متصفح سطح المكتب</h3>
+                        </div>
+                        <p class="text-gray-600 mb-4">تصفح المواقع كما تظهر على اللابتوب</p>
+                        <div class="text-center">
+                            <button class="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white py-3 px-4 rounded-xl font-bold shadow-lg transform hover:scale-105 transition" onclick="showTool('desktop-browser')">
+                                <i class="fas fa-magic ml-2"></i>
+                                استخدام الأداة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Time Calculator -->
                 <div class="glass-effect rounded-2xl shadow-xl overflow-hidden tool-card border-t-4 border-green-500">
                     <div class="p-6">
@@ -584,7 +660,7 @@
 
     <!-- Tool Modals -->
     <div id="tool-modal" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
             <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-gradient-to-r from-indigo-500 to-purple-600 rounded-t-2xl">
                 <h3 id="modal-title" class="text-2xl font-bold text-white"></h3>
                 <button onclick="hideTool()" class="text-white hover:text-gray-200 transition">
