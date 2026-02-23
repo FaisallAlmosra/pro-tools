@@ -73,7 +73,8 @@ function showTool(toolId) {
         'random-number': 'مولد أرقام عشوائية',
         'color-picker': 'منتقي الألوان',
         'base64-converter': 'محول Base64',
-        'stopwatch': 'ساعة إيقاف'
+        'stopwatch': 'ساعة إيقاف',
+        'invitation-maker': 'منشئ كروت الدعوة'
     };
     
     modalTitle.textContent = toolTitles[toolId] || 'أداة';
@@ -82,6 +83,9 @@ function showTool(toolId) {
     switch(toolId) {
         case 'video-editor':
             content = getVideoEditorContent();
+            break;
+        case 'invitation-maker':
+            content = getInvitationMakerContent();
             break;
         case 'image-editor':
             content = getImageEditorContent();
@@ -166,6 +170,150 @@ document.getElementById('tool-modal').addEventListener('click', function(e) {
         hideTool();
     }
 });
+
+// Invitation Card Maker Content
+function getInvitationMakerContent() {
+    return `
+        <div class="space-y-6">
+            <div class="bg-gradient-to-r from-rose-500 to-purple-600 text-white p-5 rounded-xl shadow-md">
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-envelope-open-text text-3xl ml-3"></i>
+                    <div>
+                        <h3 class="text-2xl font-bold">منشئ كروت الدعوة الاحترافي</h3>
+                        <p class="text-sm opacity-90">صمّم كروت دعوة احترافية جاهزة للطباعة أو الإرسال</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- الإعدادات -->
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">عنوان الكرت</label>
+                            <input id="inv-title" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="مثال: دعوة زفاف">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">نوع المناسبة</label>
+                            <input id="inv-event-type" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="زفاف، تخرج، عيد ميلاد...">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">أسماء المدعوين / أصحاب المناسبة</label>
+                        <input id="inv-names" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="مثال: محمد & فاطمة">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">التاريخ</label>
+                            <input id="inv-date" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="الجمعة 10 شوال 1447هـ">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">الوقت</label>
+                            <input id="inv-time" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="بعد صلاة العشاء">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">رابط صفحة المناسبة (يُستخدم لباركود QR)</label>
+                        <input id="inv-url" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="مثال: https://example.com/event">
+                        <p class="text-xs text-gray-500 mt-1">عند إدخال رابط، يتم إنشاء باركود QR على الكرت يمكن مسحه بالجوال للوصول السريع للموقع.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">الموقع / العنوان</label>
+                        <input id="inv-location" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="قاعة الاحتفالات - الرياض">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">نص إضافي</label>
+                        <textarea id="inv-notes" rows="3" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="يمكنك كتابة أي تفاصيل إضافية مثل أرقام التواصل أو ملاحظات خاصة"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">لون الخلفية الرئيسي</label>
+                            <input id="inv-bg-color1" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#DB2777">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">لون الخلفية الثانوي</label>
+                            <input id="inv-bg-color2" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#7C3AED">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">لون النص</label>
+                            <input id="inv-text-color" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#FFFFFF">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">محاذاة النص</label>
+                            <select id="inv-align" class="w-full p-2 border border-gray-300 rounded-lg">
+                                <option value="center" selected>منتصف</option>
+                                <option value="right">يمين</option>
+                                <option value="left">يسار</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">الخط</label>
+                            <select id="inv-font" class="w-full p-2 border border-gray-300 rounded-lg">
+                                <option value="Cairo, system-ui" selected>Cairo (الافتراضي)</option>
+                                <option value="'Times New Roman', serif">Times (كلاسيكي)</option>
+                                <option value="'Amiri', serif">Amiri (عربي)</option>
+                                <option value="system-ui, sans-serif">System UI</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">الخلفية والصور</label>
+                            <div class="flex flex-col space-y-1">
+                                <label class="text-xs text-gray-600 cursor-pointer inline-flex items-center">
+                                    <input id="inv-bg-upload" type="file" accept="image/*" class="hidden">
+                                    <span onclick="document.getElementById('inv-bg-upload').click()" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-semibold">
+                                        <i class="fas fa-image ml-1"></i> اختر صورة خلفية
+                                    </span>
+                                </label>
+                                <label class="text-xs text-gray-600 cursor-pointer inline-flex items-center">
+                                    <input id="inv-logo-upload" type="file" accept="image/*" class="hidden">
+                                    <span onclick="document.getElementById('inv-logo-upload').click()" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-semibold">
+                                        <i class="fas fa-signature ml-1"></i> اختر لوجو / شعار
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button id="inv-reset" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg font-bold text-sm transition">
+                            <i class="fas fa-undo ml-1"></i> إعادة تعيين
+                        </button>
+                        <button id="inv-download" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg font-bold text-sm transition shadow-md">
+                            <i class="fas fa-download ml-1"></i> تحميل الكرت كصورة
+                        </button>
+                    </div>
+
+                    <p class="text-xs text-gray-500">
+                        يعمل 100٪ داخل المتصفح. بعد تحميل الصورة يمكنك مشاركتها في واتساب أو طباعتها مباشرة.
+                    </p>
+                </div>
+
+                <!-- المعاينة -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm font-semibold text-gray-700">معاينة الكرت (جودة عالية 16:9)</span>
+                        <span class="text-xs text-gray-500">يمكنك التكبير في الجوال لرؤية التفاصيل</span>
+                    </div>
+                    <div class="bg-gray-100 rounded-2xl p-3 flex items-center justify-center">
+                        <canvas id="invitation-canvas" width="1200" height="675" class="w-full rounded-2xl shadow-lg border border-gray-200 bg-white"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
 // Video Editor Content
 function getVideoEditorContent() {
@@ -370,7 +518,23 @@ function getPrayerTimesContent() {
 function getDesktopBrowserContent() {
     return `
         <div class="space-y-4">
-            <div class="flex gap-2">
+            <!-- فتح في متصفح خارجي (الخيار الموصى به للجوال = نسخة سطح المكتب) -->
+            <div class="bg-gradient-to-r from-indigo-50 to-purple-50 border-2 border-indigo-200 rounded-xl p-4">
+                <p class="text-gray-800 font-bold mb-2">
+                    <i class="fas fa-external-link-alt text-indigo-600 ml-1"></i>
+                    تصفح كسطح مكتب (موصى به للجوال)
+                </p>
+                <p class="text-sm text-gray-600 mb-3">افتح الموقع في المتصفح الخارجي ليعمل كنسخة لابتوب. على الجوال: بعد فتح الرابط اختر من قائمة المتصفح «عرض نسخة سطح المكتب» أو «Request desktop site».</p>
+                <div class="flex gap-2 flex-wrap">
+                    <input type="text" id="browser-url-external" placeholder="أدخل الرابط..." class="flex-1 min-w-[200px] px-4 py-2 border-2 border-indigo-200 rounded-lg" value="https://www.google.com">
+                    <button onclick="openInExternalBrowser()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-bold transition shadow-lg">
+                        <i class="fas fa-external-link-alt ml-2"></i>
+                        فتح في المتصفح الخارجي
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex gap-2 flex-wrap">
                 <button onclick="browserBack()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
                     <i class="fas fa-arrow-right"></i>
                 </button>
@@ -390,7 +554,7 @@ function getDesktopBrowserContent() {
             </div>
             
             <div class="bg-gray-100 rounded-lg overflow-hidden" style="height: 500px;">
-                <iframe id="desktop-iframe" src="https://www.google.com" class="w-full h-full border-0"></iframe>
+                <iframe id="desktop-iframe" src="https://www.google.com" class="w-full h-full border-0" title="متصفح داخلي"></iframe>
             </div>
             
             <div class="flex gap-2 flex-wrap">
@@ -410,7 +574,7 @@ function getDesktopBrowserContent() {
             
             <div class="text-sm text-gray-500 text-center">
                 <i class="fas fa-info-circle ml-1"></i>
-                ملاحظة: بعض المواقع قد تمنع العرض داخل إطار لأسباب أمنية
+                ملاحظة: بعض المواقع قد تمنع العرض داخل إطار. للجوال استخدم «فتح في المتصفح الخارجي» ثم فعّل نسخة سطح المكتب من قائمة المتصفح.
             </div>
         </div>
     `;
@@ -860,6 +1024,9 @@ function initializeToolFunctionality(toolId) {
         case 'video-editor':
             initVideoEditor();
             break;
+        case 'invitation-maker':
+            initInvitationMaker();
+            break;
         case 'image-editor':
             initImageEditor();
             break;
@@ -915,6 +1082,352 @@ function initializeToolFunctionality(toolId) {
             initStopwatch();
             break;
     }
+}
+
+// Invitation Card Maker functionality
+let invCanvas = null;
+let invCtx = null;
+let invBgImage = null;
+let invLogoImage = null;
+let invQrImage = null;
+let invQrUrl = '';
+
+function initInvitationMaker() {
+    invCanvas = document.getElementById('invitation-canvas');
+    if (!invCanvas) return;
+    invCtx = invCanvas.getContext('2d');
+
+    const inputs = [
+        'inv-title',
+        'inv-event-type',
+        'inv-names',
+        'inv-date',
+        'inv-time',
+        'inv-location',
+        'inv-notes',
+        'inv-bg-color1',
+        'inv-bg-color2',
+        'inv-text-color',
+        'inv-align',
+        'inv-font',
+        'inv-url'
+    ];
+
+    inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const eventName = el.tagName === 'SELECT' || el.type === 'color' ? 'change' : 'input';
+        if (id === 'inv-url') {
+            el.addEventListener(eventName, updateInvitationQr);
+        } else {
+            el.addEventListener(eventName, renderInvitationCard);
+        }
+    });
+
+    const bgUpload = document.getElementById('inv-bg-upload');
+    const logoUpload = document.getElementById('inv-logo-upload');
+    if (bgUpload) {
+        bgUpload.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    invBgImage = img;
+                    renderInvitationCard();
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+    if (logoUpload) {
+        logoUpload.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const img = new Image();
+                img.onload = () => {
+                    invLogoImage = img;
+                    renderInvitationCard();
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    const resetBtn = document.getElementById('inv-reset');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            document.getElementById('inv-title').value = '';
+            document.getElementById('inv-event-type').value = '';
+            document.getElementById('inv-names').value = '';
+            document.getElementById('inv-date').value = '';
+            document.getElementById('inv-time').value = '';
+            document.getElementById('inv-location').value = '';
+            document.getElementById('inv-notes').value = '';
+            document.getElementById('inv-url').value = '';
+            document.getElementById('inv-bg-color1').value = '#DB2777';
+            document.getElementById('inv-bg-color2').value = '#7C3AED';
+            document.getElementById('inv-text-color').value = '#FFFFFF';
+            document.getElementById('inv-align').value = 'center';
+            document.getElementById('inv-font').value = 'Cairo, system-ui';
+            invBgImage = null;
+            invLogoImage = null;
+            invQrImage = null;
+            invQrUrl = '';
+            renderInvitationCard();
+        });
+    }
+
+    const downloadBtn = document.getElementById('inv-download');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            if (!invCanvas) return;
+            const dataUrl = invCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = `invitation-card-${Date.now()}.png`;
+            link.click();
+        });
+    }
+
+    // رسم أولي
+    updateInvitationQr();
+}
+
+function updateInvitationQr() {
+    const urlInput = document.getElementById('inv-url');
+    if (!urlInput) {
+        renderInvitationCard();
+        return;
+    }
+    const url = urlInput.value.trim();
+
+    if (!url) {
+        invQrImage = null;
+        invQrUrl = '';
+        renderInvitationCard();
+        return;
+    }
+
+    if (url === invQrUrl && invQrImage) {
+        renderInvitationCard();
+        return;
+    }
+
+    // إنشاء QR باستخدام مكتبة qrcodejs في عنصر مخفي ثم تحويله لصورة تُرسم على الكرت
+    const buffer = document.createElement('div');
+    buffer.style.position = 'fixed';
+    buffer.style.left = '-9999px';
+    buffer.style.top = '0';
+    document.body.appendChild(buffer);
+
+    buffer.innerHTML = '';
+    try {
+        const size = 256;
+        // QRCode متوفر من مكتبة qrcodejs المضمنة في الصفحة
+        // eslint-disable-next-line no-undef
+        new QRCode(buffer, {
+            text: url,
+            width: size,
+            height: size
+        });
+        const canvas = buffer.querySelector('canvas');
+        if (canvas) {
+            const img = new Image();
+            img.onload = () => {
+                invQrImage = img;
+                invQrUrl = url;
+                document.body.removeChild(buffer);
+                renderInvitationCard();
+            };
+            img.src = canvas.toDataURL('image/png');
+        } else {
+            document.body.removeChild(buffer);
+            invQrImage = null;
+            renderInvitationCard();
+        }
+    } catch (e) {
+        document.body.removeChild(buffer);
+        invQrImage = null;
+        renderInvitationCard();
+    }
+}
+
+function renderInvitationCard() {
+    if (!invCanvas || !invCtx) return;
+
+    const w = invCanvas.width;
+    const h = invCanvas.height;
+    invCtx.clearRect(0, 0, w, h);
+
+    const bg1 = document.getElementById('inv-bg-color1')?.value || '#DB2777';
+    const bg2 = document.getElementById('inv-bg-color2')?.value || '#7C3AED';
+    const textColor = document.getElementById('inv-text-color')?.value || '#FFFFFF';
+    const align = document.getElementById('inv-align')?.value || 'center';
+    const fontFamily = document.getElementById('inv-font')?.value || 'Cairo, system-ui';
+
+    const title = document.getElementById('inv-title')?.value || 'دعوتكم لنا شرفٌ كبير';
+    const eventType = document.getElementById('inv-event-type')?.value || 'حفل مميز';
+    const names = document.getElementById('inv-names')?.value || '';
+    const date = document.getElementById('inv-date')?.value || '';
+    const time = document.getElementById('inv-time')?.value || '';
+    const location = document.getElementById('inv-location')?.value || '';
+    const notes = document.getElementById('inv-notes')?.value || '';
+
+    // الخلفية
+    if (invBgImage) {
+        const img = invBgImage;
+        const scale = Math.max(w / img.width, h / img.height);
+        const iw = img.width * scale;
+        const ih = img.height * scale;
+        const ix = (w - iw) / 2;
+        const iy = (h - ih) / 2;
+        invCtx.drawImage(img, ix, iy, iw, ih);
+        // طبقة شفافة لتحسين قراءة النص
+        invCtx.fillStyle = 'rgba(0,0,0,0.35)';
+        invCtx.fillRect(0, 0, w, h);
+    } else {
+        const grad = invCtx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, bg1);
+        grad.addColorStop(1, bg2);
+        invCtx.fillStyle = grad;
+        invCtx.fillRect(0, 0, w, h);
+    }
+
+    // إطار داخلي
+    invCtx.strokeStyle = 'rgba(255,255,255,0.75)';
+    invCtx.lineWidth = 8;
+    invCtx.strokeRect(40, 40, w - 80, h - 80);
+
+    // لوجو
+    if (invLogoImage) {
+        const maxLogoWidth = w * 0.18;
+        const img = invLogoImage;
+        const scale = maxLogoWidth / img.width;
+        const lw = img.width * scale;
+        const lh = img.height * scale;
+        const padding = 60;
+        const lx = w - lw - padding;
+        const ly = 60;
+        invCtx.save();
+        invCtx.globalAlpha = 0.95;
+        invCtx.drawImage(img, lx, ly, lw, lh);
+        invCtx.restore();
+    }
+
+    // إعداد النص
+    invCtx.fillStyle = textColor;
+    invCtx.textBaseline = 'middle';
+    invCtx.shadowColor = 'rgba(0,0,0,0.35)';
+    invCtx.shadowBlur = 14;
+
+    if (align === 'center') {
+        invCtx.textAlign = 'center';
+    } else if (align === 'right') {
+        invCtx.textAlign = 'right';
+    } else {
+        invCtx.textAlign = 'left';
+    }
+
+    const centerX =
+        align === 'center' ? w / 2 :
+        align === 'right' ? w - 90 :
+        90;
+
+    // العنوان
+    invCtx.font = `700 64px ${fontFamily}`;
+    drawWrappedText(invCtx, title, centerX, h * 0.32, 60, w - 220);
+
+    // نوع المناسبة
+    invCtx.font = `500 32px ${fontFamily}`;
+    drawWrappedText(invCtx, eventType, centerX, h * 0.45, 40, w - 260);
+
+    // الأسماء
+    if (names) {
+        invCtx.font = `600 40px ${fontFamily}`;
+        drawWrappedText(invCtx, names, centerX, h * 0.56, 44, w - 260);
+    }
+
+    // التفاصيل السفلية
+    invCtx.font = `400 26px ${fontFamily}`;
+    const lines = [];
+    if (date || time) {
+        const dateTime = [date, time].filter(Boolean).join(' - ');
+        lines.push(dateTime);
+    }
+    if (location) {
+        lines.push(location);
+    }
+    if (notes) {
+        lines.push(notes);
+    }
+
+    let baseY = h * 0.70;
+    const lineHeight = 34;
+    lines.forEach((line, index) => {
+        drawWrappedText(invCtx, line, centerX, baseY + index * lineHeight, lineHeight, w - 260);
+    });
+
+    // رسم باركود QR إن وُجد رابط
+    if (invQrImage) {
+        const qrSize = Math.min(w, h) * 0.19;
+        const padding = 70;
+        const qx = padding;
+        const qy = h - qrSize - padding;
+
+        invCtx.save();
+        invCtx.shadowColor = 'rgba(0,0,0,0.4)';
+        invCtx.shadowBlur = 16;
+        invCtx.fillStyle = 'rgba(255,255,255,0.92)';
+        invCtx.fillRect(qx - 14, qy - 14, qrSize + 28, qrSize + 28);
+        invCtx.shadowBlur = 0;
+        invCtx.drawImage(invQrImage, qx, qy, qrSize, qrSize);
+        invCtx.restore();
+
+        invCtx.fillStyle = textColor;
+        invCtx.font = `400 18px ${fontFamily}`;
+        invCtx.textAlign = 'left';
+        invCtx.textBaseline = 'top';
+        const label = 'امسح الباركود لفتح رابط المناسبة';
+        invCtx.fillText(label, qx + qrSize + 20, qy + qrSize / 2 - 10);
+    }
+
+    // إزالة الظل للتأكد من أن التحميل نظيف إذا استُخدم في الطباعة
+    invCtx.shadowBlur = 0;
+}
+
+function drawWrappedText(ctx, text, x, y, lineHeight, maxWidth) {
+    if (!text) return;
+    const words = text.split(' ');
+    let line = '';
+    const lines = [];
+
+    for (let i = 0; i < words.length; i++) {
+        const testLine = line ? line + ' ' + words[i] : words[i];
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && line) {
+            lines.push(line);
+            line = words[i];
+        } else {
+            line = testLine;
+        }
+    }
+    if (line) {
+        lines.push(line);
+    }
+
+    const totalHeight = lines.length * lineHeight;
+    let startY = y - totalHeight / 2 + lineHeight / 2;
+
+    lines.forEach((ln) => {
+        ctx.fillText(ln, x, startY);
+        startY += lineHeight;
+    });
 }
 
 // Video Editor functionality
@@ -1205,17 +1718,43 @@ function calculateNextPrayer(timings) {
 
 // Desktop Browser functionality
 function initDesktopBrowser() {
-    document.getElementById('browser-url').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') browserGo();
-    });
+    const urlInput = document.getElementById('browser-url');
+    const urlExternalInput = document.getElementById('browser-url-external');
+    if (urlInput) {
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') browserGo();
+        });
+    }
+    // مزامنة حقل الرابط الخارجي مع الرابط الداخلي
+    if (urlExternalInput) {
+        urlExternalInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') openInExternalBrowser();
+        });
+    }
+}
+
+/** فتح الرابط الحالي في المتصفح الخارجي (تبويب جديد). على الجوال يفضّل تفعيل "نسخة سطح المكتب" من قائمة المتصفح. */
+function openInExternalBrowser() {
+    const input = document.getElementById('browser-url-external');
+    const urlInput = document.getElementById('browser-url');
+    const url = (input && input.value) ? input.value.trim() : (urlInput && urlInput.value ? urlInput.value.trim() : 'https://www.google.com');
+    let finalUrl = url;
+    if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+        finalUrl = 'https://' + finalUrl;
+    }
+    window.open(finalUrl, '_blank', 'noopener,noreferrer');
 }
 
 function browserGo() {
-    let url = document.getElementById('browser-url').value;
+    const urlInput = document.getElementById('browser-url');
+    const urlExternalInput = document.getElementById('browser-url-external');
+    let url = urlInput ? urlInput.value : '';
     if (!url.startsWith('http')) {
         url = 'https://' + url;
     }
-    document.getElementById('desktop-iframe').src = url;
+    const iframe = document.getElementById('desktop-iframe');
+    if (iframe) iframe.src = url;
+    if (urlExternalInput) urlExternalInput.value = url;
 }
 
 function browserBack() {
@@ -1250,8 +1789,12 @@ function browserFullscreen() {
 }
 
 function loadSite(url) {
-    document.getElementById('browser-url').value = url;
-    document.getElementById('desktop-iframe').src = url;
+    const urlInput = document.getElementById('browser-url');
+    const urlExternalInput = document.getElementById('browser-url-external');
+    const iframe = document.getElementById('desktop-iframe');
+    if (urlInput) urlInput.value = url;
+    if (urlExternalInput) urlExternalInput.value = url;
+    if (iframe) iframe.src = url;
 }
 
 // Speed Test functionality
