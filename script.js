@@ -175,19 +175,19 @@ document.getElementById('tool-modal').addEventListener('click', function(e) {
 function getInvitationMakerContent() {
     return `
         <div class="space-y-6">
-            <div class="bg-gradient-to-r from-rose-500 to-purple-600 text-white p-5 rounded-xl shadow-md">
+            <div class="bg-gradient-to-r from-rose-500 to-purple-600 text-white p-5 rounded-xl shadow-lg">
                 <div class="flex items-center mb-2">
                     <i class="fas fa-envelope-open-text text-3xl ml-3"></i>
                     <div>
                         <h3 class="text-2xl font-bold">منشئ كروت الدعوة الاحترافي</h3>
-                        <p class="text-sm opacity-90">صمّم كروت دعوة احترافية جاهزة للطباعة أو الإرسال</p>
+                        <p class="text-sm opacity-90">صمّم كروت دعوة احترافية مع صور زينة وفوانيس جاهزة للطباعة أو الإرسال</p>
                     </div>
                 </div>
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- الإعدادات -->
-                <div class="space-y-4">
+                <div class="space-y-4 overflow-y-auto max-h-[70vh] pr-2">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1">عنوان الكرت</label>
@@ -216,9 +216,8 @@ function getInvitationMakerContent() {
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">رابط صفحة المناسبة (يُستخدم لباركود QR)</label>
-                        <input id="inv-url" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="مثال: https://example.com/event">
-                        <p class="text-xs text-gray-500 mt-1">عند إدخال رابط، يتم إنشاء باركود QR على الكرت يمكن مسحه بالجوال للوصول السريع للموقع.</p>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">رابط المناسبة (QR - اضغط على الباركود في المعاينة لفتح الرابط)</label>
+                        <input id="inv-url" type="url" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="https://example.com/event">
                     </div>
 
                     <div>
@@ -227,66 +226,121 @@ function getInvitationMakerContent() {
                     </div>
 
                     <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-1">نص إضافي</label>
-                        <textarea id="inv-notes" rows="3" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="يمكنك كتابة أي تفاصيل إضافية مثل أرقام التواصل أو ملاحظات خاصة"></textarea>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">ملاحظات / نص إضافي</label>
+                        <textarea id="inv-notes" rows="3" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="أرقام التواصل، ملاحظات خاصة، ترحيب..."></textarea>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">لون الخلفية الرئيسي</label>
-                            <input id="inv-bg-color1" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#DB2777">
+                    <div class="border-t border-gray-200 pt-3">
+                        <h4 class="text-sm font-bold text-gray-800 mb-2"><i class="fas fa-palette ml-1"></i> الألوان والخلفية</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">لون الخلفية 1</label>
+                                <input id="inv-bg-color1" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#DB2777">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">لون الخلفية 2</label>
+                                <input id="inv-bg-color2" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#7C3AED">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">لون النص</label>
+                                <input id="inv-text-color" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#FFFFFF">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">لون الإطار</label>
+                                <input id="inv-border-color" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#FFFFFF">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">لون الخلفية الثانوي</label>
-                            <input id="inv-bg-color2" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#7C3AED">
+                        <div class="mt-2">
+                            <label class="block text-xs font-semibold text-gray-600 mb-1">سمك الإطار (px)</label>
+                            <input id="inv-border-width" type="number" min="0" max="20" value="8" class="w-full p-2 border border-gray-300 rounded-lg">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">لون النص</label>
-                            <input id="inv-text-color" type="color" class="w-full h-10 p-1 border border-gray-300 rounded-lg" value="#FFFFFF">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">محاذاة النص</label>
-                            <select id="inv-align" class="w-full p-2 border border-gray-300 rounded-lg">
-                                <option value="center" selected>منتصف</option>
-                                <option value="right">يمين</option>
-                                <option value="left">يسار</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">الخط</label>
-                            <select id="inv-font" class="w-full p-2 border border-gray-300 rounded-lg">
-                                <option value="Cairo, system-ui" selected>Cairo (الافتراضي)</option>
-                                <option value="'Times New Roman', serif">Times (كلاسيكي)</option>
-                                <option value="'Amiri', serif">Amiri (عربي)</option>
-                                <option value="system-ui, sans-serif">System UI</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">الخلفية والصور</label>
-                            <div class="flex flex-col space-y-1">
-                                <label class="text-xs text-gray-600 cursor-pointer inline-flex items-center">
-                                    <input id="inv-bg-upload" type="file" accept="image/*" class="hidden">
-                                    <span onclick="document.getElementById('inv-bg-upload').click()" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-semibold">
-                                        <i class="fas fa-image ml-1"></i> اختر صورة خلفية
-                                    </span>
-                                </label>
-                                <label class="text-xs text-gray-600 cursor-pointer inline-flex items-center">
-                                    <input id="inv-logo-upload" type="file" accept="image/*" class="hidden">
-                                    <span onclick="document.getElementById('inv-logo-upload').click()" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-lg text-xs font-semibold">
-                                        <i class="fas fa-signature ml-1"></i> اختر لوجو / شعار
-                                    </span>
-                                </label>
+                    <div class="border-t border-gray-200 pt-3">
+                        <h4 class="text-sm font-bold text-gray-800 mb-2"><i class="fas fa-text-height ml-1"></i> الخط والمحاذاة</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">حجم خط العنوان</label>
+                                <select id="inv-title-size" class="w-full p-2 border border-gray-300 rounded-lg">
+                                    <option value="48">صغير (48)</option>
+                                    <option value="56">متوسط (56)</option>
+                                    <option value="64" selected>افتراضي (64)</option>
+                                    <option value="72">كبير (72)</option>
+                                    <option value="80">كبير جداً (80)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">حجم خط النص</label>
+                                <select id="inv-body-size" class="w-full p-2 border border-gray-300 rounded-lg">
+                                    <option value="20">صغير (20)</option>
+                                    <option value="24">متوسط (24)</option>
+                                    <option value="26" selected>افتراضي (26)</option>
+                                    <option value="30">كبير (30)</option>
+                                    <option value="34">كبير جداً (34)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">محاذاة النص</label>
+                                <select id="inv-align" class="w-full p-2 border border-gray-300 rounded-lg">
+                                    <option value="center" selected>منتصف</option>
+                                    <option value="right">يمين</option>
+                                    <option value="left">يسار</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">الخط</label>
+                                <select id="inv-font" class="w-full p-2 border border-gray-300 rounded-lg">
+                                    <option value="Cairo, system-ui" selected>Cairo</option>
+                                    <option value="'Times New Roman', serif">Times</option>
+                                    <option value="'Amiri', serif">Amiri</option>
+                                    <option value="system-ui, sans-serif">System UI</option>
+                                </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex gap-3">
+                    <div class="border-t border-gray-200 pt-3">
+                        <h4 class="text-sm font-bold text-gray-800 mb-2"><i class="fas fa-images ml-1"></i> الصور</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center gap-2 cursor-pointer p-2 bg-gray-50 rounded-lg hover:bg-gray-100">
+                                <input id="inv-bg-upload" type="file" accept="image/*" class="hidden">
+                                <i class="fas fa-image text-rose-500"></i>
+                                <span class="text-sm font-semibold">صورة خلفية للكرت</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer p-2 bg-gray-50 rounded-lg hover:bg-gray-100">
+                                <input id="inv-logo-upload" type="file" accept="image/*" class="hidden">
+                                <i class="fas fa-signature text-indigo-500"></i>
+                                <span class="text-sm font-semibold">لوجو / شعار</span>
+                            </label>
+                            <div class="mt-2">
+                                <label class="block text-xs font-semibold text-gray-600 mb-1">صور زينة (فوانيس، زخارف...)</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="flex flex-col items-center gap-1 p-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-rose-400">
+                                        <input id="inv-deco1-upload" type="file" accept="image/*" class="hidden">
+                                        <span class="text-xs cursor-pointer hover:text-rose-600" onclick="document.getElementById('inv-deco1-upload').click()"><i class="fas fa-plus-circle ml-1"></i> زينة 1 (فانوس/زخرفة)</span>
+                                        <select id="inv-deco1-pos" class="w-full text-xs border rounded py-1">
+                                            <option value="top-right">أعلى يمين</option>
+                                            <option value="top-left">أعلى يسار</option>
+                                            <option value="bottom-right">أسفل يمين</option>
+                                            <option value="bottom-left">أسفل يسار</option>
+                                        </select>
+                                    </div>
+                                    <div class="flex flex-col items-center gap-1 p-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-rose-400">
+                                        <input id="inv-deco2-upload" type="file" accept="image/*" class="hidden">
+                                        <span class="text-xs cursor-pointer hover:text-rose-600" onclick="document.getElementById('inv-deco2-upload').click()"><i class="fas fa-plus-circle ml-1"></i> زينة 2 (فانوس/زخرفة)</span>
+                                        <select id="inv-deco2-pos" class="w-full text-xs border rounded py-1">
+                                            <option value="top-left">أعلى يسار</option>
+                                            <option value="top-right">أعلى يمين</option>
+                                            <option value="bottom-left">أسفل يسار</option>
+                                            <option value="bottom-right">أسفل يمين</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 pt-2">
                         <button id="inv-reset" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-3 rounded-lg font-bold text-sm transition">
                             <i class="fas fa-undo ml-1"></i> إعادة تعيين
                         </button>
@@ -296,18 +350,18 @@ function getInvitationMakerContent() {
                     </div>
 
                     <p class="text-xs text-gray-500">
-                        يعمل 100٪ داخل المتصفح. بعد تحميل الصورة يمكنك مشاركتها في واتساب أو طباعتها مباشرة.
+                        اضغط على الباركود في المعاينة لفتح رابط المناسبة. التصميم يعمل 100٪ داخل المتصفح.
                     </p>
                 </div>
 
                 <!-- المعاينة -->
                 <div class="space-y-3">
                     <div class="flex items-center justify-between">
-                        <span class="text-sm font-semibold text-gray-700">معاينة الكرت (جودة عالية 16:9)</span>
-                        <span class="text-xs text-gray-500">يمكنك التكبير في الجوال لرؤية التفاصيل</span>
+                        <span class="text-sm font-semibold text-gray-700">معاينة الكرت (16:9)</span>
                     </div>
-                    <div class="bg-gray-100 rounded-2xl p-3 flex items-center justify-center">
-                        <canvas id="invitation-canvas" width="1200" height="675" class="w-full rounded-2xl shadow-lg border border-gray-200 bg-white"></canvas>
+                    <div class="relative bg-gray-100 rounded-2xl p-3 flex items-center justify-center" id="inv-canvas-wrapper">
+                        <canvas id="invitation-canvas" width="1200" height="675" class="w-full rounded-2xl shadow-lg border border-gray-200 bg-white max-w-full"></canvas>
+                        <a id="inv-qr-link" href="#" target="_blank" rel="noopener" class="absolute rounded-lg border-2 border-transparent hover:border-rose-400 transition-all bg-white/30 hover:bg-white/50" style="display: none; left: 5.83%; bottom: 10.37%; width: 10.69%; height: 19%;"></a>
                     </div>
                 </div>
             </div>
@@ -1091,32 +1145,26 @@ let invBgImage = null;
 let invLogoImage = null;
 let invQrImage = null;
 let invQrUrl = '';
+let invDeco1Image = null;
+let invDeco2Image = null;
 
 function initInvitationMaker() {
     invCanvas = document.getElementById('invitation-canvas');
     if (!invCanvas) return;
     invCtx = invCanvas.getContext('2d');
 
-    const inputs = [
-        'inv-title',
-        'inv-event-type',
-        'inv-names',
-        'inv-date',
-        'inv-time',
-        'inv-location',
-        'inv-notes',
-        'inv-bg-color1',
-        'inv-bg-color2',
-        'inv-text-color',
-        'inv-align',
-        'inv-font',
-        'inv-url'
+    const inputIds = [
+        'inv-title', 'inv-event-type', 'inv-names', 'inv-date', 'inv-time',
+        'inv-location', 'inv-notes', 'inv-bg-color1', 'inv-bg-color2',
+        'inv-text-color', 'inv-align', 'inv-font', 'inv-url',
+        'inv-border-color', 'inv-border-width', 'inv-title-size', 'inv-body-size',
+        'inv-deco1-pos', 'inv-deco2-pos'
     ];
 
-    inputs.forEach(id => {
+    inputIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
-        const eventName = el.tagName === 'SELECT' || el.type === 'color' ? 'change' : 'input';
+        const eventName = el.tagName === 'SELECT' || el.type === 'color' || el.type === 'number' ? 'change' : 'input';
         if (id === 'inv-url') {
             el.addEventListener(eventName, updateInvitationQr);
         } else {
@@ -1124,17 +1172,17 @@ function initInvitationMaker() {
         }
     });
 
-    const bgUpload = document.getElementById('inv-bg-upload');
-    const logoUpload = document.getElementById('inv-logo-upload');
-    if (bgUpload) {
-        bgUpload.addEventListener('change', (e) => {
+    function handleImageUpload(inputId, setter) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        input.addEventListener('change', (e) => {
             const file = e.target.files && e.target.files[0];
             if (!file || !file.type.startsWith('image/')) return;
             const reader = new FileReader();
             reader.onload = (ev) => {
                 const img = new Image();
                 img.onload = () => {
-                    invBgImage = img;
+                    setter(img);
                     renderInvitationCard();
                 };
                 img.src = ev.target.result;
@@ -1142,22 +1190,11 @@ function initInvitationMaker() {
             reader.readAsDataURL(file);
         });
     }
-    if (logoUpload) {
-        logoUpload.addEventListener('change', (e) => {
-            const file = e.target.files && e.target.files[0];
-            if (!file || !file.type.startsWith('image/')) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                const img = new Image();
-                img.onload = () => {
-                    invLogoImage = img;
-                    renderInvitationCard();
-                };
-                img.src = ev.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+
+    handleImageUpload('inv-bg-upload', (img) => { invBgImage = img; });
+    handleImageUpload('inv-logo-upload', (img) => { invLogoImage = img; });
+    handleImageUpload('inv-deco1-upload', (img) => { invDeco1Image = img; });
+    handleImageUpload('inv-deco2-upload', (img) => { invDeco2Image = img; });
 
     const resetBtn = document.getElementById('inv-reset');
     if (resetBtn) {
@@ -1175,10 +1212,23 @@ function initInvitationMaker() {
             document.getElementById('inv-text-color').value = '#FFFFFF';
             document.getElementById('inv-align').value = 'center';
             document.getElementById('inv-font').value = 'Cairo, system-ui';
+            document.getElementById('inv-border-color').value = '#FFFFFF';
+            const bw = document.getElementById('inv-border-width');
+            if (bw) bw.value = '8';
+            const ts = document.getElementById('inv-title-size');
+            if (ts) ts.value = '64';
+            const bs = document.getElementById('inv-body-size');
+            if (bs) bs.value = '26';
             invBgImage = null;
             invLogoImage = null;
+            invDeco1Image = null;
+            invDeco2Image = null;
             invQrImage = null;
             invQrUrl = '';
+            const d1 = document.getElementById('inv-deco1-upload');
+            const d2 = document.getElementById('inv-deco2-upload');
+            if (d1) d1.value = '';
+            if (d2) d2.value = '';
             renderInvitationCard();
         });
     }
@@ -1195,7 +1245,6 @@ function initInvitationMaker() {
         });
     }
 
-    // رسم أولي
     updateInvitationQr();
 }
 
@@ -1258,6 +1307,44 @@ function updateInvitationQr() {
     }
 }
 
+function getWrappedLines(ctx, text, maxWidth) {
+    if (!text) return [];
+    const lines = [];
+    const paragraphs = String(text).split(/\n/);
+    for (let p = 0; p < paragraphs.length; p++) {
+        const words = paragraphs[p].trim().split(/\s+/).filter(Boolean);
+        let line = '';
+        for (let i = 0; i < words.length; i++) {
+            const testLine = line ? line + ' ' + words[i] : words[i];
+            const metrics = ctx.measureText(testLine);
+            if (metrics.width > maxWidth && line) {
+                lines.push(line);
+                line = words[i];
+            } else {
+                line = testLine;
+            }
+        }
+        if (line) lines.push(line);
+    }
+    return lines;
+}
+
+function getWrappedTextHeight(ctx, text, lineHeight, maxWidth) {
+    const lines = getWrappedLines(ctx, text, maxWidth);
+    return lines.length * lineHeight;
+}
+
+function drawWrappedTextAt(ctx, text, x, startY, lineHeight, maxWidth, align) {
+    const lines = getWrappedLines(ctx, text, maxWidth);
+    const totalHeight = lines.length * lineHeight;
+    let y = startY - totalHeight / 2 + lineHeight / 2;
+    lines.forEach((ln) => {
+        ctx.fillText(ln, x, y);
+        y += lineHeight;
+    });
+    return startY + totalHeight / 2;
+}
+
 function renderInvitationCard() {
     if (!invCanvas || !invCtx) return;
 
@@ -1270,6 +1357,10 @@ function renderInvitationCard() {
     const textColor = document.getElementById('inv-text-color')?.value || '#FFFFFF';
     const align = document.getElementById('inv-align')?.value || 'center';
     const fontFamily = document.getElementById('inv-font')?.value || 'Cairo, system-ui';
+    const borderColor = document.getElementById('inv-border-color')?.value || '#FFFFFF';
+    const borderWidth = Math.max(0, parseInt(document.getElementById('inv-border-width')?.value || '8', 10) || 8);
+    const titleSize = parseInt(document.getElementById('inv-title-size')?.value || '64', 10) || 64;
+    const bodySize = parseInt(document.getElementById('inv-body-size')?.value || '26', 10) || 26;
 
     const title = document.getElementById('inv-title')?.value || 'دعوتكم لنا شرفٌ كبير';
     const eventType = document.getElementById('inv-event-type')?.value || 'حفل مميز';
@@ -1277,7 +1368,12 @@ function renderInvitationCard() {
     const date = document.getElementById('inv-date')?.value || '';
     const time = document.getElementById('inv-time')?.value || '';
     const location = document.getElementById('inv-location')?.value || '';
-    const notes = document.getElementById('inv-notes')?.value || '';
+    const notes = (document.getElementById('inv-notes')?.value || '').trim();
+
+    const padding = 50;
+    const innerW = w - padding * 2;
+    const innerH = h - padding * 2;
+    const maxTextWidth = innerW - 180;
 
     // الخلفية
     if (invBgImage) {
@@ -1285,10 +1381,7 @@ function renderInvitationCard() {
         const scale = Math.max(w / img.width, h / img.height);
         const iw = img.width * scale;
         const ih = img.height * scale;
-        const ix = (w - iw) / 2;
-        const iy = (h - ih) / 2;
-        invCtx.drawImage(img, ix, iy, iw, ih);
-        // طبقة شفافة لتحسين قراءة النص
+        invCtx.drawImage(img, (w - iw) / 2, (h - ih) / 2, iw, ih);
         invCtx.fillStyle = 'rgba(0,0,0,0.35)';
         invCtx.fillRect(0, 0, w, h);
     } else {
@@ -1299,135 +1392,144 @@ function renderInvitationCard() {
         invCtx.fillRect(0, 0, w, h);
     }
 
-    // إطار داخلي
-    invCtx.strokeStyle = 'rgba(255,255,255,0.75)';
-    invCtx.lineWidth = 8;
-    invCtx.strokeRect(40, 40, w - 80, h - 80);
+    // صور زينة في الزوايا
+    const decoSize = Math.min(w, h) * 0.12;
+    function drawDeco(img, pos) {
+        if (!img) return;
+        const s = Math.min(decoSize / img.width, decoSize / img.height);
+        const dw = img.width * s;
+        const dh = img.height * s;
+        let dx = 0, dy = 0;
+        if (pos === 'top-right') { dx = w - dw - padding - 20; dy = padding + 20; }
+        else if (pos === 'top-left') { dx = padding + 20; dy = padding + 20; }
+        else if (pos === 'bottom-right') { dx = w - dw - padding - 20; dy = h - padding - 20 - dh; }
+        else if (pos === 'bottom-left') { dx = padding + 20; dy = h - padding - 20 - dh; }
+        invCtx.save();
+        invCtx.globalAlpha = 0.9;
+        invCtx.drawImage(img, dx, dy, dw, dh);
+        invCtx.restore();
+    }
+    const pos1 = document.getElementById('inv-deco1-pos')?.value || 'top-right';
+    const pos2 = document.getElementById('inv-deco2-pos')?.value || 'top-left';
+    drawDeco(invDeco1Image, pos1);
+    drawDeco(invDeco2Image, pos2);
 
-    // لوجو
+    // إطار داخلي
+    if (borderWidth > 0) {
+        invCtx.strokeStyle = borderColor;
+        invCtx.lineWidth = borderWidth;
+        invCtx.strokeRect(padding, padding, w - padding * 2, h - padding * 2);
+    }
+
+    // لوجو (أعلى اليمين)
     if (invLogoImage) {
-        const maxLogoWidth = w * 0.18;
+        const maxLogoW = w * 0.16;
         const img = invLogoImage;
-        const scale = maxLogoWidth / img.width;
+        const scale = maxLogoW / img.width;
         const lw = img.width * scale;
         const lh = img.height * scale;
-        const padding = 60;
-        const lx = w - lw - padding;
-        const ly = 60;
+        const lx = w - lw - padding - 25;
+        const ly = padding + 25;
         invCtx.save();
         invCtx.globalAlpha = 0.95;
         invCtx.drawImage(img, lx, ly, lw, lh);
         invCtx.restore();
     }
 
-    // إعداد النص
     invCtx.fillStyle = textColor;
     invCtx.textBaseline = 'middle';
-    invCtx.shadowColor = 'rgba(0,0,0,0.35)';
-    invCtx.shadowBlur = 14;
+    invCtx.shadowColor = 'rgba(0,0,0,0.4)';
+    invCtx.shadowBlur = 12;
 
-    if (align === 'center') {
-        invCtx.textAlign = 'center';
-    } else if (align === 'right') {
-        invCtx.textAlign = 'right';
-    } else {
-        invCtx.textAlign = 'left';
-    }
+    if (align === 'center') invCtx.textAlign = 'center';
+    else if (align === 'right') invCtx.textAlign = 'right';
+    else invCtx.textAlign = 'left';
 
-    const centerX =
-        align === 'center' ? w / 2 :
-        align === 'right' ? w - 90 :
-        90;
+    const centerX = align === 'center' ? w / 2 : (align === 'right' ? w - padding - 90 : padding + 90);
+
+    const titleLineH = Math.max(28, titleSize * 0.5);
+    const bodyLineH = Math.max(22, bodySize * 0.85);
+    let currentY = padding + 100;
 
     // العنوان
-    invCtx.font = `700 64px ${fontFamily}`;
-    drawWrappedText(invCtx, title, centerX, h * 0.32, 60, w - 220);
+    invCtx.font = `700 ${titleSize}px ${fontFamily}`;
+    const titleH = getWrappedTextHeight(invCtx, title, titleLineH, maxTextWidth);
+    drawWrappedTextAt(invCtx, title, centerX, currentY + titleH / 2, titleLineH, maxTextWidth, align);
+    currentY += titleH + 24;
 
     // نوع المناسبة
-    invCtx.font = `500 32px ${fontFamily}`;
-    drawWrappedText(invCtx, eventType, centerX, h * 0.45, 40, w - 260);
+    invCtx.font = `500 ${Math.min(36, titleSize - 20)}px ${fontFamily}`;
+    const eventH = getWrappedTextHeight(invCtx, eventType, bodyLineH, maxTextWidth);
+    drawWrappedTextAt(invCtx, eventType, centerX, currentY + eventH / 2, bodyLineH, maxTextWidth, align);
+    currentY += eventH + 20;
 
     // الأسماء
     if (names) {
-        invCtx.font = `600 40px ${fontFamily}`;
-        drawWrappedText(invCtx, names, centerX, h * 0.56, 44, w - 260);
+        invCtx.font = `600 ${bodySize + 6}px ${fontFamily}`;
+        const namesH = getWrappedTextHeight(invCtx, names, bodyLineH + 4, maxTextWidth);
+        drawWrappedTextAt(invCtx, names, centerX, currentY + namesH / 2, bodyLineH + 4, maxTextWidth, align);
+        currentY += namesH + 28;
     }
 
-    // التفاصيل السفلية
-    invCtx.font = `400 26px ${fontFamily}`;
-    const lines = [];
-    if (date || time) {
-        const dateTime = [date, time].filter(Boolean).join(' - ');
-        lines.push(dateTime);
-    }
-    if (location) {
-        lines.push(location);
-    }
+    // منطقة QR في الأسفل - نحجز مساحة لها
+    const qrSize = invQrImage ? Math.min(w, h) * 0.19 : 0;
+    const qrPadding = 60;
+    const bottomBlockTop = h - qrPadding - qrSize - 30;
+    const detailsMaxY = bottomBlockTop - 20;
+
+    // التفاصيل (تاريخ، وقت، موقع، ملاحظات) فوق منطقة QR
+    invCtx.font = `400 ${bodySize}px ${fontFamily}`;
+    const detailLines = [];
+    if (date || time) detailLines.push([date, time].filter(Boolean).join(' - '));
+    if (location) detailLines.push(location);
     if (notes) {
-        lines.push(notes);
+        const noteLines = getWrappedLines(invCtx, notes, maxTextWidth);
+        noteLines.forEach(ln => detailLines.push(ln));
     }
 
-    let baseY = h * 0.70;
-    const lineHeight = 34;
-    lines.forEach((line, index) => {
-        drawWrappedText(invCtx, line, centerX, baseY + index * lineHeight, lineHeight, w - 260);
-    });
+    let detailY = currentY + bodyLineH / 2;
+    const step = bodyLineH + 4;
+    for (let i = 0; i < detailLines.length; i++) {
+        if (detailY > detailsMaxY) break;
+        invCtx.fillText(detailLines[i], centerX, detailY);
+        detailY += step;
+    }
 
-    // رسم باركود QR إن وُجد رابط
+    // باركود QR (بدون نص "امسح الباركود...")
     if (invQrImage) {
-        const qrSize = Math.min(w, h) * 0.19;
-        const padding = 70;
-        const qx = padding;
-        const qy = h - qrSize - padding;
-
+        const qx = qrPadding;
+        const qy = h - qrSize - qrPadding;
         invCtx.save();
-        invCtx.shadowColor = 'rgba(0,0,0,0.4)';
-        invCtx.shadowBlur = 16;
-        invCtx.fillStyle = 'rgba(255,255,255,0.92)';
-        invCtx.fillRect(qx - 14, qy - 14, qrSize + 28, qrSize + 28);
+        invCtx.shadowColor = 'rgba(0,0,0,0.35)';
+        invCtx.shadowBlur = 14;
+        invCtx.fillStyle = 'rgba(255,255,255,0.95)';
+        invCtx.fillRect(qx - 12, qy - 12, qrSize + 24, qrSize + 24);
         invCtx.shadowBlur = 0;
         invCtx.drawImage(invQrImage, qx, qy, qrSize, qrSize);
         invCtx.restore();
-
-        invCtx.fillStyle = textColor;
-        invCtx.font = `400 18px ${fontFamily}`;
-        invCtx.textAlign = 'left';
-        invCtx.textBaseline = 'top';
-        const label = 'امسح الباركود لفتح رابط المناسبة';
-        invCtx.fillText(label, qx + qrSize + 20, qy + qrSize / 2 - 10);
+        window._invQrBounds = { qx, qy, qrSize, w, h };
+    } else {
+        window._invQrBounds = null;
     }
 
-    // إزالة الظل للتأكد من أن التحميل نظيف إذا استُخدم في الطباعة
     invCtx.shadowBlur = 0;
+    updateInvitationQrLink();
 }
 
-function drawWrappedText(ctx, text, x, y, lineHeight, maxWidth) {
-    if (!text) return;
-    const words = text.split(' ');
-    let line = '';
-    const lines = [];
-
-    for (let i = 0; i < words.length; i++) {
-        const testLine = line ? line + ' ' + words[i] : words[i];
-        const metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && line) {
-            lines.push(line);
-            line = words[i];
-        } else {
-            line = testLine;
-        }
+function updateInvitationQrLink() {
+    const link = document.getElementById('inv-qr-link');
+    if (!link) return;
+    if (!invQrUrl || !window._invQrBounds) {
+        link.style.display = 'none';
+        return;
     }
-    if (line) {
-        lines.push(line);
-    }
-
-    const totalHeight = lines.length * lineHeight;
-    let startY = y - totalHeight / 2 + lineHeight / 2;
-
-    lines.forEach((ln) => {
-        ctx.fillText(ln, x, startY);
-        startY += lineHeight;
-    });
+    const b = window._invQrBounds;
+    link.href = invQrUrl;
+    link.style.display = 'block';
+    link.style.left = (b.qx / b.w * 100).toFixed(2) + '%';
+    link.style.bottom = ((b.h - b.qy - b.qrSize) / b.h * 100).toFixed(2) + '%';
+    link.style.width = (b.qrSize / b.w * 100).toFixed(2) + '%';
+    link.style.height = (b.qrSize / b.h * 100).toFixed(2) + '%';
 }
 
 // Video Editor functionality
